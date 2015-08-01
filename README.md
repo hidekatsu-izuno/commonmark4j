@@ -1,2 +1,5 @@
 # commonmark4j
-commonmark4j is java port for commonmark.js
+
+commonmark4j is java port from commonmark.js.
+
+

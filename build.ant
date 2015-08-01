@@ -1,0 +1,60 @@
+<!DOCTYPE project>
+<project name="commonmark4j" default="dist"
+	xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+	<xmlproperty file="pom.xml" />
+
+	<tstamp>
+		<format property="timestamp" pattern="yyyyMMddHHmmssSSS" locale="en" />
+	</tstamp>
+
+	<property name="tmp" location="${java.io.tmpdir}/${ant.project.name}-${timestamp}" />
+
+	<property name="maven-staging-repository-id" value="sonatype-nexus-staging" />
+	<property name="maven-staging-repository-url" value="https://oss.sonatype.org/service/local/staging/deploy/maven2" />
+
+	<get src="http://central.maven.org/maven2/org/apache/maven/maven-ant-tasks/2.1.3/maven-ant-tasks-2.1.3.jar"
+		dest="lib/" skipexisting="true" />
+
+	<typedef uri="antlib:org.apache.maven.artifact.ant"
+		resource="org/apache/maven/artifact/ant/antlib.xml"
+		classpath="lib/maven-ant-tasks-2.1.3.jar" />
+
+	<target name="dist">
+		<mkdir dir="${tmp}/build/" />
+		<javac source="1.8" target="1.8" srcdir="src" destdir="${tmp}/build/" debug="${debug}" fork="true"
+			includeantruntime="false">
+			<compilerarg value="-Xlint:unchecked"/>
+		</javac>
+		<javadoc sourcepath="src" destdir="${tmp}/javadoc" encoding="UTF-8" charset="UTF-8" docencoding="UTF-8" author="true"
+			additionalparam="-J-Duser.language=en_US">
+			<link href="http://docs.oracle.com/javase/8/docs/api/" />
+			<excludepackage name="net.arnx.commonmark4j.impl.*" />
+		</javadoc>
+
+		<jar destfile="${tmp}/${project.name}-${project.version}.jar">
+			<fileset dir="${tmp}/build" includes="**/*.class" />
+			<fileset dir="src" excludes="**/*.java" />
+		</jar>
+		<jar destfile="${tmp}/${project.name}-${project.version}-sources.jar">
+			<fileset dir="src" />
+		</jar>
+		<jar destfile="${tmp}/${project.name}-${project.version}-javadoc.jar">
+			<fileset dir="${tmp}/javadoc" />
+		</jar>
+
+		<zip destfile="${project.name}-${project.version}.zip">
+			<zipfileset file="${tmp}/${project.name}-${project.version}*.jar" prefix="${project.name}-${project.version}" />
+
+			<zipfileset dir="." prefix="${project.name}-${project.version}" >
+				<include name="LICENSE" />
+				<include name="pom.xml" />
+				<include name="build.xml" />
+			</zipfileset>
+		</zip>
+
+		<delete dir="${tmp}" />
+	</target>
+
+	<target name="release" depends="dist">
+	</target>
+</project>
