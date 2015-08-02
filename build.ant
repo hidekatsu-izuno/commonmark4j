@@ -65,7 +65,7 @@
 		<delete dir="${tmp}" />
 		<mkdir dir="${tmp}" />
 
-		<unzip src="${dist}/${project.name}-${project.version}.zip" dest="${tmp}">
+		<unzip src="${project.name}-${project.version}.zip" dest="${tmp}">
 			<patternset>
 				<include name="${project.name}-${project.version}/*.jar" />
 			</patternset>
