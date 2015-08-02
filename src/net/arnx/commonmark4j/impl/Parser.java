@@ -15,8 +15,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.arnx.commonmark4j.CMarkParser;
 import net.arnx.commonmark4j.CMarkNodeType;
+import net.arnx.commonmark4j.CMarkParser;
 import net.arnx.commonmark4j.impl.Node.Event;
 import net.arnx.commonmark4j.impl.Node.NodeWalker;
 
@@ -367,7 +367,9 @@ public class Parser implements CMarkParser {
 					int indent = parser.indent;
 					if (container._isFenced) { // fenced
 						Matcher m = null;
-						if (indent <= 3 && parser.nextNonspace < ln.length() && ln.charAt(parser.nextNonspace) == container._fenceChar
+						if (indent <= 3 && parser.nextNonspace < ln.length()
+								&& ln.charAt(parser.nextNonspace) == container._fenceChar
+								&& parser.nextNonspace < ln.length()
 								&& (m = reClosingCodeFence.matcher(ln.substring(parser.nextNonspace))).find()
 								&& m.group(0).length() >= container._fenceLength) {
 							// closing fence - we're at end of line, so we can return
@@ -498,6 +500,7 @@ public class Parser implements CMarkParser {
 			(parser, container) -> {
 				Matcher match;
 				if (!parser.indented &&
+						parser.nextNonspace < parser.currentLine.length() &&
 						(match = reATXHeaderMarker.matcher(parser.currentLine.substring(parser.nextNonspace))).find()) {
 					parser.advanceNextNonspace();
 					parser.advanceOffset(match.group().length(), false);
@@ -518,6 +521,7 @@ public class Parser implements CMarkParser {
 			(parser, container) -> {
 				Matcher match;
 				if (!parser.indented &&
+						parser.nextNonspace < parser.currentLine.length() &&
 						(match = reCodeFence.matcher(parser.currentLine.substring(parser.nextNonspace))).find()) {
 					int fenceLength = match.group().length();
 					parser.closeUnmatchedBlocks();
@@ -567,6 +571,7 @@ public class Parser implements CMarkParser {
 						container.type() == CMarkNodeType.PARAGRAPH &&
 						(container._string_content.indexOf('\n') ==
 						container._string_content.length() - 1) &&
+						parser.nextNonspace < parser.currentLine.length() &&
 						((match = reSetextHeaderLine.matcher(parser.currentLine.substring(parser.nextNonspace))).find())) {
 					parser.closeUnmatchedBlocks();
 					Node header = new Node(CMarkNodeType.HEADER, container.sourcepos());
@@ -585,6 +590,7 @@ public class Parser implements CMarkParser {
 			// hrule
 			(parser, container) -> {
 				if (!parser.indented &&
+						parser.nextNonspace < parser.currentLine.length() &&
 						reHrule.matcher(parser.currentLine.substring(parser.nextNonspace)).find()) {
 					parser.closeUnmatchedBlocks();
 					parser.addChild(CMarkNodeType.HORIZONTAL_RULE, parser.nextNonspace);
@@ -756,7 +762,7 @@ public class Parser implements CMarkParser {
 
 			// this is a little performance optimization:
 			if (!this.indented &&
-					!reMaybeSpecial.matcher(this.nextNonspace < ln.length() ? ln.substring(this.nextNonspace) : "").find()) {
+					!(this.nextNonspace < ln.length() && reMaybeSpecial.matcher(ln.substring(this.nextNonspace)).find())) {
 				this.advanceNextNonspace();
 				break;
 			}

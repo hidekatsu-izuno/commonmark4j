@@ -102,7 +102,7 @@ class InlineParser {
 	// If re matches at current position in the subject, advance
 	// position in subject and return the match; otherwise return null.
 	String match(Pattern re) {
-		Matcher m = re.matcher(this.subject.substring(pos));
+		Matcher m = re.matcher((this.pos < this.subject.length()) ? this.subject.substring(this.pos) : "");
 		if (!m.find()) {
 			return null;
 		} else {
@@ -398,12 +398,12 @@ class InlineParser {
 						// remove used delimiters from stack elts and inlines
 						opener.numdelims -= use_delims;
 						closer.numdelims -= use_delims;
-						opener_inl._literal =
+						opener_inl._literal = (opener_inl._literal.length() >= use_delims) ?
 								opener_inl._literal.substring(0,
-										opener_inl._literal.length() - use_delims);
-						closer_inl._literal =
+										opener_inl._literal.length() - use_delims) : "";
+						closer_inl._literal = (closer_inl._literal.length() >= use_delims) ?
 								closer_inl._literal.substring(0,
-										closer_inl._literal.length() - use_delims);
+										closer_inl._literal.length() - use_delims) : "";
 
 						// build contents for new emph element
 						Node emph = new Node(use_delims == 1 ? CMarkNodeType.EMPH : CMarkNodeType.STRONG, null);
@@ -616,6 +616,7 @@ class InlineParser {
 					((dest = this.parseLinkDestination()) != null) &&
 					this.spnl() &&
 					// make sure there's a space before the title:
+					this.pos - 1 < this.subject.length() &&
 					(reWhitespaceChar.matcher(this.subject.substring(this.pos - 1, this.pos)).find() &&
 							(title = this.parseLinkTitle()) != null || true) &&
 					this.spnl() &&
@@ -743,8 +744,11 @@ class InlineParser {
 		this.pos += 1; // assume we're at a \n
 		// check previous node for trailing spaces
 		Node lastc = block._lastChild;
-		if (lastc != null && lastc.type() == CMarkNodeType.TEXT && lastc._literal.charAt(lastc._literal.length() - 1) == ' ') {
-			boolean hardbreak = lastc._literal.charAt(lastc._literal.length() - 2) == ' ';
+		if (lastc != null && lastc.type() == CMarkNodeType.TEXT
+				&& lastc._literal.length() >= 1
+				&& lastc._literal.charAt(lastc._literal.length() - 1) == ' ') {
+			boolean hardbreak = lastc._literal.length() >= 2
+					&& lastc._literal.charAt(lastc._literal.length() - 2) == ' ';
 			lastc._literal = replace(lastc._literal, reFinalSpace, "");
 			block.appendChild(new Node(hardbreak ? CMarkNodeType.HARDBREAK : CMarkNodeType.SOFTBREAK, null));
 		} else {

@@ -67,7 +67,7 @@ class Common {
 	}
 
 	private static String unescapeChar(String s) {
-		if (s.charAt(0) == C_BACKSLASH) {
+		if (!s.isEmpty() && s.charAt(0) == C_BACKSLASH) {
 			return s.substring(1);
 		} else {
 			return decodeHTML(s);
@@ -334,7 +334,9 @@ class Common {
 	}
 
 	public static String normalizeReference(String s) {
-		s = s.substring(1, s.length() - 1).trim();
+		if (s.length() > 1) {
+			s = s.substring(1, s.length() - 1).trim();
+		}
 		StringBuilder sb = new StringBuilder(s.length());
 		char prev = '\0';
 		for (int i = 0; i < s.length(); i++) {
