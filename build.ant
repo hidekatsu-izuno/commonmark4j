@@ -12,14 +12,16 @@
 	<property name="maven-staging-repository-id" value="sonatype-nexus-staging" />
 	<property name="maven-staging-repository-url" value="https://oss.sonatype.org/service/local/staging/deploy/maven2" />
 
-	<get src="http://central.maven.org/maven2/org/apache/maven/maven-ant-tasks/2.1.3/maven-ant-tasks-2.1.3.jar"
-		dest="lib/" skipexisting="true" />
+	<mkdir dir="lib" />
+	<get src="http://central.maven.org/maven2/org/apache/maven/maven-ant-tasks/2.1.3/maven-ant-tasks-2.1.3.jar" dest="lib/" skipexisting="true" />
 
 	<typedef uri="antlib:org.apache.maven.artifact.ant"
 		resource="org/apache/maven/artifact/ant/antlib.xml"
 		classpath="lib/maven-ant-tasks-2.1.3.jar" />
 
 	<target name="dist">
+		<delete file="${project.name}-${project.version}.zip" />
+
 		<mkdir dir="${tmp}/build/" />
 		<javac source="1.8" target="1.8" srcdir="src" destdir="${tmp}/build/" debug="true" fork="true"
 			includeantruntime="false">
@@ -50,8 +52,9 @@
 
 			<zipfileset dir="." prefix="${project.name}-${project.version}" >
 				<include name="LICENSE" />
+				<include name="README.md" />
 				<include name="pom.xml" />
-				<include name="build.xml" />
+				<include name="build.ant" />
 			</zipfileset>
 		</zip>
 
@@ -59,5 +62,51 @@
 	</target>
 
 	<target name="release" depends="dist">
+		<delete dir="${tmp}" />
+		<mkdir dir="${tmp}" />
+
+		<unzip src="${dist}/${project.name}-${project.version}.zip" dest="${tmp}">
+			<patternset>
+				<include name="${project.name}-${project.version}/*.jar" />
+			</patternset>
+		</unzip>
+
+		<property name="binaries-jar" value="${tmp}/${project.name}-${project.version}/${project.name}-${project.version}.jar" />
+		<property name="javadoc-jar" value="${tmp}/${project.name}-${project.version}/${project.name}-${project.version}-javadoc.jar" />
+		<property name="sources-jar" value="${tmp}/${project.name}-${project.version}/${project.name}-${project.version}-sources.jar" />
+
+		<!-- sign and deploy the main artifact -->
+		<artifact:mvn>
+			<arg value="org.apache.maven.plugins:maven-gpg-plugin:1.3:sign-and-deploy-file" />
+			<arg value="-Durl=${maven-staging-repository-url}" />
+			<arg value="-DrepositoryId=${maven-staging-repository-id}" />
+			<arg value="-DpomFile=pom.xml" />
+			<arg value="-Dfile=${binaries-jar}" />
+			<arg value="-Pgpg" />
+		</artifact:mvn>
+
+		<!-- sign and deploy the sources artifact -->
+		<artifact:mvn>
+			<arg value="org.apache.maven.plugins:maven-gpg-plugin:1.3:sign-and-deploy-file" />
+			<arg value="-Durl=${maven-staging-repository-url}" />
+			<arg value="-DrepositoryId=${maven-staging-repository-id}" />
+			<arg value="-DpomFile=pom.xml" />
+			<arg value="-Dfile=${sources-jar}" />
+			<arg value="-Dclassifier=sources" />
+			<arg value="-Pgpg" />
+		</artifact:mvn>
+
+		<!-- sign and deploy the javadoc artifact -->
+		<artifact:mvn>
+			<arg value="org.apache.maven.plugins:maven-gpg-plugin:1.3:sign-and-deploy-file" />
+			<arg value="-Durl=${maven-staging-repository-url}" />
+			<arg value="-DrepositoryId=${maven-staging-repository-id}" />
+			<arg value="-DpomFile=pom.xml" />
+			<arg value="-Dfile=${javadoc-jar}" />
+			<arg value="-Dclassifier=javadoc" />
+			<arg value="-Pgpg" />
+		</artifact:mvn>
+
+		<delete dir="${tmp}" failonerror="off" />
 	</target>
 </project>

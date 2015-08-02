@@ -8,6 +8,12 @@ The specification of this implementaion is defined by [CommonMark Spec](http://s
 The official reference implementation was written in C and JavaScript.
 Commonmark4j is ported from [commonmark.js](https://github.com/jgm/commonmark.js).
 
+Requirements
+--------------
+
+- Java SE 8+
+- Zero Dependencies
+
 Command Line
 --------------
 
@@ -27,6 +33,8 @@ Options:");
 
 API Description
 --------------
+
+You can find the classes of this library in net.arnx.commonmark4j package.
 
 The basic usage, use a CMarkTransformer class.
 
@@ -56,7 +64,7 @@ try (BufferedWriter out = Files.newBufferedWriter(Paths.get("..."))) {
 }
 ```
 
-Maven
+Maven Repository
 --------------
 
 Commonmark4j is scheduled to become available in Maven central repository.

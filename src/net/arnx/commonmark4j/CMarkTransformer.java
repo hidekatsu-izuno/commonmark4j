@@ -76,9 +76,9 @@ public interface CMarkTransformer {
 	/**
 	 * Transforms a CommmonMark text to a specified format.
 	 *
-	 * @param in
-	 * @param out
-	 * @throws IOException
+	 * @param in a source
+	 * @param out a destination
+	 * @throws IOException an I/O error occures.
 	 */
 	public void transform(BufferedReader in, Appendable out) throws IOException;
 }

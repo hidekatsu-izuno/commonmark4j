@@ -82,6 +82,11 @@ public final class Main {
 			}
 		}
 
+		if (src == null) {
+			usage(System.err, "source is required.");
+			System.exit(1);
+		}
+
 		if (option != null) {
 			usage(System.err, "invalid option: " + option);
 			System.exit(1);
@@ -98,7 +103,7 @@ public final class Main {
 		BufferedReader reader = null;
 		BufferedWriter writer = null;
 		try {
-			reader = (src != null) ? Files.newBufferedReader(Paths.get(src)) :
+			reader = (!src.equals("-")) ? Files.newBufferedReader(Paths.get(src)) :
 				new BufferedReader(new InputStreamReader(System.in));
 			writer = (dest != null) ? Files.newBufferedWriter(Paths.get(dest)) :
 				new BufferedWriter(new OutputStreamWriter(System.out));
@@ -107,7 +112,7 @@ public final class Main {
 		} finally {
 			try {
 				if (writer != null) {
-					if (src != null) {
+					if (!src.equals("-")) {
 						writer.close();
 					} else {
 						writer.flush();
