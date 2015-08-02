@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2015, Hidekatsu Izuno <hidekatsu.izuno@gmail.com>
  *
- * This software is released under the 2 clause BSD License, see LICENSE.txt.
+ * This software is released under the 2 clause BSD License, see LICENSE.
  */
 package net.arnx.commonmark4j.impl;
 
@@ -16,8 +16,8 @@ import java.util.regex.Pattern;
 import org.w3c.dom.Attr;
 
 import net.arnx.commonmark4j.CMarkNode;
-import net.arnx.commonmark4j.CMarkRenderer;
 import net.arnx.commonmark4j.CMarkNodeType;
+import net.arnx.commonmark4j.CMarkRenderer;
 import net.arnx.commonmark4j.impl.Node.Event;
 import net.arnx.commonmark4j.impl.Node.NodeWalker;
 

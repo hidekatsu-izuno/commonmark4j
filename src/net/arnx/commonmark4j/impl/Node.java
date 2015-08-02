@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2015, Hidekatsu Izuno <hidekatsu.izuno@gmail.com>
  *
- * This software is released under the 2 clause BSD License, see LICENSE.txt.
+ * This software is released under the 2 clause BSD License, see LICENSE.
  */
 package net.arnx.commonmark4j.impl;
 
@@ -144,18 +144,22 @@ public class Node implements CMarkNode {
 		return _type;
 	}
 
+	@Override
 	public Node firstChild() {
 		return _firstChild;
 	}
 
+	@Override
 	public Node lastChild() {
 		return _lastChild;
 	}
 
+	@Override
 	public Node next() {
 		return _next;
 	}
 
+	@Override
 	public Node prev() {
 		return _prev;
 	}
@@ -165,6 +169,7 @@ public class Node implements CMarkNode {
 		return _parent;
 	}
 
+	@Override
 	public int[][] sourcepos() {
 		return _sourcepos;
 	}

@@ -21,7 +21,7 @@
 
 	<target name="dist">
 		<mkdir dir="${tmp}/build/" />
-		<javac source="1.8" target="1.8" srcdir="src" destdir="${tmp}/build/" debug="${debug}" fork="true"
+		<javac source="1.8" target="1.8" srcdir="src" destdir="${tmp}/build/" debug="true" fork="true"
 			includeantruntime="false">
 			<compilerarg value="-Xlint:unchecked"/>
 		</javac>
@@ -32,6 +32,9 @@
 		</javadoc>
 
 		<jar destfile="${tmp}/${project.name}-${project.version}.jar">
+			<manifest>
+				<attribute name="Main-Class" value="net.arnx.commonmark4j.Main" />
+			</manifest>
 			<fileset dir="${tmp}/build" includes="**/*.class" />
 			<fileset dir="src" excludes="**/*.java" />
 		</jar>

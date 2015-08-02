@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2015, Hidekatsu Izuno <hidekatsu.izuno@gmail.com>
  *
- * This software is released under the 2 clause BSD License, see LICENSE.txt.
+ * This software is released under the 2 clause BSD License, see LICENSE.
  */
 package net.arnx.commonmark4j;
 
@@ -20,7 +20,6 @@ public enum CMarkNodeType {
 	CODE_BLOCK,
 	HTML_BLOCK,
 	HORIZONTAL_RULE,
-
 	TEXT,
 	SOFTBREAK,
 	HARDBREAK,
@@ -29,5 +28,5 @@ public enum CMarkNodeType {
 	HTML,
 	LINK,
 	IMAGE,
-	CODE
+	CODE;
 }

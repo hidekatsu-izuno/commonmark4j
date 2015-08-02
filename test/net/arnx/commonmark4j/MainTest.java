@@ -37,7 +37,7 @@ public class MainTest {
 
 		try {
 			Main.main(new String[] {
-				"-type", "xml",
+				"-format", "xml",
 				src.toAbsolutePath().toString(),
 				dest.toAbsolutePath().toString()
 			});

@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2015, Hidekatsu Izuno <hidekatsu.izuno@gmail.com>
+ *
+ * This software is released under the 2 clause BSD License, see LICENSE.
+ */
 package net.arnx.commonmark4j.impl;
 
 import java.io.BufferedReader;
@@ -5,8 +10,8 @@ import java.io.IOException;
 
 import net.arnx.commonmark4j.CMarkNode;
 import net.arnx.commonmark4j.CMarkParser;
-import net.arnx.commonmark4j.CMarkTransformer;
 import net.arnx.commonmark4j.CMarkRenderer;
+import net.arnx.commonmark4j.CMarkTransformer;
 
 public class Transformer implements CMarkTransformer {
 	private String format = "html";
