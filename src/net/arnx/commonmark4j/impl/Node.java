@@ -319,30 +319,49 @@ public class Node implements CMarkNode {
 	@Override
 	public Iterator<CMarkNode> iterator() {
 		return new Iterator<CMarkNode>() {
-			private NodeWalker walker = walker();
-			private boolean available = false;
-			private Event event;
+			private Node current = Node.this;
+			private boolean available = true;
 
 			@Override
 			public boolean hasNext() {
 				if (!available) {
-					event = walker.next();
+					if (current == null) {
+						// no handle
+					} else if (current._firstChild != null) {
+						current = current._firstChild;
+					} else {
+						boolean find = false;
+
+						Node target = current;
+						while (target != null) {
+							if (target._next != null) {
+								current = target._next;
+								find = true;
+								break;
+							}
+							target = target._parent;
+						}
+
+						if (!find) {
+							current = null;
+						}
+					}
+
 					available = true;
 				}
-				return (event != null);
+				return (current != null);
 			}
 
 			@Override
 			public CMarkNode next() {
 				hasNext();
 
-				if (event == null) {
+				if (current == null) {
 					throw new NoSuchElementException();
 				}
 
-				Node node = event.node;
 				available = false;
-				return node;
+				return current;
 			}
 		};
 	}
