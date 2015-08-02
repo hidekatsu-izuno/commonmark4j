@@ -77,5 +77,5 @@ Commonmark4j is available in Maven central repository.
 License
 --------------
 
-Commonmark4j is licensed by The  2 clause BSD License, see [LICENSE](LICENSE).
+Commonmark4j is licensed by The  2 clause BSD License, see [LICENSE](https://github.com/hidekatsu-izuno/commonmark4j/blob/master/LICENSE).
 
