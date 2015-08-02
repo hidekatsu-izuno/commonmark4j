@@ -65,5 +65,6 @@
 		</dependency>
 	</dependencies>
 	<version>0.21.0</version>
-	<description>java port for commonmark.js</description>
+	<url>http://hidekatsu-izuno.github.io/commonmark4j/</url>
+	<description>CommonMark transform library for Java</description>
 </project>

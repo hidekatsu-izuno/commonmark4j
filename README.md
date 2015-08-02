@@ -67,7 +67,7 @@ try (BufferedWriter out = Files.newBufferedWriter(Paths.get("..."))) {
 Maven Repository
 --------------
 
-Commonmark4j is scheduled to become available in Maven central repository.
+Commonmark4j is available in Maven central repository.
 
 ```xml
 <groupId>net.arnx</groupId>
