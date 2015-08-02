@@ -14,10 +14,6 @@ import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import net.arnx.commonmark4j.impl.HtmlRenderer;
-import net.arnx.commonmark4j.impl.Parser;
-import net.arnx.commonmark4j.impl.XmlRenderer;
-
 public final class Main {
 	public static void main(String[] args) throws IOException {
 		boolean time = false;
@@ -27,7 +23,7 @@ public final class Main {
 		boolean sourcepos = false;
 		String softbreak = "\n";
 
-		String type = "html";
+		String format = "html";
 		String src = null;
 		String dest = null;
 
@@ -47,11 +43,11 @@ public final class Main {
 			} else if (args[i].startsWith("-")) {
 				option = args[i];
 			} else if (option != null) {
-				if (option.equals("-type")) {
+				if (option.equals("-format")) {
 					if (args[i].equals("xml") || args[i].equals("html")) {
-						type = args[i];
+						format = args[i];
 					} else {
-						usage(System.err, "invalid type: " + args[i]);
+						usage(System.err, "invalid format: " + args[i]);
 						System.exit(1);
 					}
 				} else if (option.equals("-softbreak")) {
@@ -80,53 +76,38 @@ public final class Main {
 			System.exit(1);
 		}
 
-		CMarkParser parser = new Parser(new Parser.Options()
+		CMarkProcessor processor = CMarkProcessor.newProcessor()
+				.safe(safe)
 				.smart(smart)
-				.time(time));
+				.softbreak(softbreak)
+				.sourcepos(sourcepos)
+				.time(time)
+				.format(format);
 
-		CMarkNode node;
-		if (src != null) {
-			try (BufferedReader reader = Files.newBufferedReader(Paths.get(src))) {
-				node = parser.parse(reader);
-			}
-		} else {
-			try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in) {
-				@Override
-				public void close() throws IOException {
-					// no handle
+		BufferedReader reader = null;
+		BufferedWriter writer = null;
+		try {
+			reader = (src != null) ? Files.newBufferedReader(Paths.get(src)) :
+				new BufferedReader(new InputStreamReader(System.in));
+			writer = (dest != null) ? Files.newBufferedWriter(Paths.get(dest)) :
+				new BufferedWriter(new OutputStreamWriter(System.out));
+
+			processor.process(reader, writer);
+		} finally {
+			try {
+				if (writer != null) {
+					if (src != null) {
+						writer.close();
+					} else {
+						writer.flush();
+					}
 				}
-			})) {
-				node = parser.parse(reader);
-			}
-		}
-
-		CMarkRenderer renderer;
-		if (type.equals("xml")) {
-			renderer = new XmlRenderer(new XmlRenderer.Options()
-					.time(time)
-					.safe(safe)
-					.sourcepos(sourcepos)
-					.softbreak(softbreak));
-		} else {
-			renderer = new HtmlRenderer(new HtmlRenderer.Options()
-					.time(time)
-					.safe(safe)
-					.sourcepos(sourcepos)
-					.softbreak(softbreak));
-		}
-
-		if (dest != null) {
-			try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(dest))) {
-				renderer.render(node, writer);
-			}
-		} else {
-			try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(System.out) {
-				@Override
-				public void close() throws IOException {
-					// no handle
+			} finally {
+				if (reader != null) {
+					if (dest != null) {
+						reader.close();
+					}
 				}
-			})) {
-				renderer.render(node, writer);
 			}
 		}
 	}
@@ -138,10 +119,13 @@ public final class Main {
 		}
 		out.println("Usage: java -jar commonmark4j-0.8.0.jar [options] [source] [dest]");
 		out.println("Options:");
-		out.println("  -help             print this help message");
-		out.println("  -smart            use smart characters");
-		out.println("  -time             print total time");
-		out.println("  -type {html,xml}  print as specified format (default: html)");
+		out.println("  -help               print this help message");
+		out.println("  -safe               remove dangerous code");
+		out.println("  -smart              use smart characters");
+		out.println("  -softbreak <text>   softbreak characters (default: \\n)");
+		out.println("  -sourcepos          include source position information");
+		out.println("  -time               print total time");
+		out.println("  -format {html,xml}  output as specified format (default: html)");
 	}
 
 	private Main() {
