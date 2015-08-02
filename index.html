@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Commonmark4j by hidekatsu-izuno</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Commonmark4j</h1>
+      <h2 class="project-tagline">commonmark4j is CommonMark transform library for Java</h2>
+      <a href="https://github.com/hidekatsu-izuno/commonmark4j" class="btn">View on GitHub</a>
+      <a href="https://github.com/hidekatsu-izuno/commonmark4j/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/hidekatsu-izuno/commonmark4j/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="commonmark4j" class="anchor" href="#commonmark4j" aria-hidden="true"><span class="octicon octicon-link"></span></a>commonmark4j</h1>
+
+<p>Commonmark4j is a <a href="http://commonmark.org/">CommonMark</a> transformer.</p>
+
+<p>The specification of this implementaion is defined by <a href="http://spec.commonmark.org/">CommonMark Spec</a>.</p>
+
+<p>The official reference implementation was written in C and JavaScript.
+Commonmark4j is ported from <a href="https://github.com/jgm/commonmark.js">commonmark.js</a>.</p>
+
+<h2>
+<a id="requirements" class="anchor" href="#requirements" aria-hidden="true"><span class="octicon octicon-link"></span></a>Requirements</h2>
+
+<ul>
+<li>Java SE 8+</li>
+<li>Zero Dependencies</li>
+</ul>
+
+<h2>
+<a id="command-line" class="anchor" href="#command-line" aria-hidden="true"><span class="octicon octicon-link"></span></a>Command Line</h2>
+
+<p>Commonmark4j can run from command line.</p>
+
+<pre><code>Usage: java -jar commonmark4j-[version].jar [options] [source] [dest]
+Options:");
+  -help               print this help message.
+  -safe               remove dangerous code.
+  -smart              use smart characters.
+  -softbreak &lt;text&gt;   set softbreak characters. (default: \\n)
+  -sourcepos          include source position information.
+  -time               print total time.");
+  -format {html,xml}  output as specified format. (default: html)
+</code></pre>
+
+<h2>
+<a id="api-description" class="anchor" href="#api-description" aria-hidden="true"><span class="octicon octicon-link"></span></a>API Description</h2>
+
+<p>You can find the classes of this library in net.arnx.commonmark4j package.</p>
+
+<p>The basic usage, use a CMarkTransformer class.</p>
+
+<div class="highlight highlight-java"><pre><span class="pl-smi">CMarkTransformer</span> transformer <span class="pl-k">=</span> <span class="pl-smi">CMarkTransformer</span><span class="pl-k">.</span>newTransformer();
+
+<span class="pl-k">try</span> (<span class="pl-smi">BufferedReader</span> in <span class="pl-k">=</span> <span class="pl-smi">Files</span><span class="pl-k">.</span>newBufferedReader(<span class="pl-smi">Paths</span><span class="pl-k">.</span>get(<span class="pl-s"><span class="pl-pds">"</span>...<span class="pl-pds">"</span></span>));
+    <span class="pl-smi">BufferedWriter</span> out <span class="pl-k">=</span> <span class="pl-smi">Files</span><span class="pl-k">.</span>newBufferedWriter(<span class="pl-smi">Paths</span><span class="pl-k">.</span>get(<span class="pl-s"><span class="pl-pds">"</span>...<span class="pl-pds">"</span></span>))) {
+
+    transformer<span class="pl-k">.</span>transform(in, out);
+}</pre></div>
+
+<p>If you want to use in same way as commonmark.js, you can use CMarkParser and CMarkRenderer.</p>
+
+<div class="highlight highlight-java"><pre><span class="pl-smi">CmarkNode</span> node;
+
+<span class="pl-smi">CMarkParser</span> parser <span class="pl-k">=</span> <span class="pl-smi">CMarkParser</span><span class="pl-k">.</span>newParser();
+<span class="pl-k">try</span> (<span class="pl-smi">BufferedReader</span> in <span class="pl-k">=</span> <span class="pl-smi">Files</span><span class="pl-k">.</span>newBufferedReader(<span class="pl-smi">Paths</span><span class="pl-k">.</span>get(<span class="pl-s"><span class="pl-pds">"</span>...<span class="pl-pds">"</span></span>)) {
+    node <span class="pl-k">=</span> parser<span class="pl-k">.</span>parse(in);
+}
+
+<span class="pl-smi">CMarkRenderer</span> renderer <span class="pl-k">=</span> <span class="pl-smi">CMarkRenderer</span><span class="pl-k">.</span>newHtmlRenderer();
+<span class="pl-k">try</span> (<span class="pl-smi">BufferedWriter</span> out <span class="pl-k">=</span> <span class="pl-smi">Files</span><span class="pl-k">.</span>newBufferedWriter(<span class="pl-smi">Paths</span><span class="pl-k">.</span>get(<span class="pl-s"><span class="pl-pds">"</span>...<span class="pl-pds">"</span></span>))) {
+    renderer<span class="pl-k">.</span>render(out);
+}</pre></div>
+
+<h2>
+<a id="maven-repository" class="anchor" href="#maven-repository" aria-hidden="true"><span class="octicon octicon-link"></span></a>Maven Repository</h2>
+
+<p>Commonmark4j is scheduled to become available in Maven central repository.</p>
+
+<div class="highlight highlight-xml"><pre>&lt;<span class="pl-ent">groupId</span>&gt;net.arnx&lt;/<span class="pl-ent">groupId</span>&gt;
+&lt;<span class="pl-ent">artifactId</span>&gt;commonmark4j&lt;/<span class="pl-ent">artifactId</span>&gt;</pre></div>
+
+<h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>Commonmark4j is licensed by The  2 clause BSD License, see <a href="LICENSE">LICENSE</a>.</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/hidekatsu-izuno/commonmark4j">Commonmark4j</a> is maintained by <a href="https://github.com/hidekatsu-izuno">hidekatsu-izuno</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
+
