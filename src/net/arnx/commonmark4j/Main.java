@@ -14,7 +14,18 @@ import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+/**
+ * A CommonMark command.
+ *
+ * @author Hidekatsu Izuno
+ */
 public final class Main {
+	/**
+	 *  A Command line entry point.
+	 *
+	 * @param args command line arguments
+	 * @throws IOException an I/O error occures.
+	 */
 	public static void main(String[] args) throws IOException {
 		boolean time = false;
 		boolean smart = false;
@@ -76,7 +87,7 @@ public final class Main {
 			System.exit(1);
 		}
 
-		CMarkProcessor processor = CMarkProcessor.newProcessor()
+		CMarkTransformer processor = CMarkTransformer.newTransformer()
 				.safe(safe)
 				.smart(smart)
 				.softbreak(softbreak)
@@ -92,7 +103,7 @@ public final class Main {
 			writer = (dest != null) ? Files.newBufferedWriter(Paths.get(dest)) :
 				new BufferedWriter(new OutputStreamWriter(System.out));
 
-			processor.process(reader, writer);
+			processor.transform(reader, writer);
 		} finally {
 			try {
 				if (writer != null) {
@@ -119,13 +130,13 @@ public final class Main {
 		}
 		out.println("Usage: java -jar commonmark4j-0.8.0.jar [options] [source] [dest]");
 		out.println("Options:");
-		out.println("  -help               print this help message");
-		out.println("  -safe               remove dangerous code");
-		out.println("  -smart              use smart characters");
-		out.println("  -softbreak <text>   softbreak characters (default: \\n)");
-		out.println("  -sourcepos          include source position information");
-		out.println("  -time               print total time");
-		out.println("  -format {html,xml}  output as specified format (default: html)");
+		out.println("  -help               print this help message.");
+		out.println("  -safe               remove dangerous code.");
+		out.println("  -smart              use smart characters.");
+		out.println("  -softbreak <text>   set softbreak characters. (default: \\n)");
+		out.println("  -sourcepos          include source position information.");
+		out.println("  -time               print total time.");
+		out.println("  -format {html,xml}  output as specified format. (default: html)");
 	}
 
 	private Main() {

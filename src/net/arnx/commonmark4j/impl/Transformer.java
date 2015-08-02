@@ -5,10 +5,10 @@ import java.io.IOException;
 
 import net.arnx.commonmark4j.CMarkNode;
 import net.arnx.commonmark4j.CMarkParser;
-import net.arnx.commonmark4j.CMarkProcessor;
+import net.arnx.commonmark4j.CMarkTransformer;
 import net.arnx.commonmark4j.CMarkRenderer;
 
-public class Processor implements CMarkProcessor {
+public class Transformer implements CMarkTransformer {
 	private String format = "html";
 	private boolean safe;
 	private boolean smart;
@@ -17,43 +17,43 @@ public class Processor implements CMarkProcessor {
 	private boolean time;
 
 	@Override
-	public CMarkProcessor format(String text) {
+	public CMarkTransformer format(String text) {
 		format = text;
 		return this;
 	}
 
 	@Override
-	public CMarkProcessor safe(boolean value) {
+	public CMarkTransformer safe(boolean value) {
 		safe = value;
 		return this;
 	}
 
 	@Override
-	public CMarkProcessor smart(boolean value) {
+	public CMarkTransformer smart(boolean value) {
 		smart = value;
 		return this;
 	}
 
 	@Override
-	public CMarkProcessor softbreak(String text) {
+	public CMarkTransformer softbreak(String text) {
 		softbreak = text;
 		return this;
 	}
 
 	@Override
-	public CMarkProcessor sourcepos(boolean value) {
+	public CMarkTransformer sourcepos(boolean value) {
 		sourcepos = value;
 		return this;
 	}
 
 	@Override
-	public CMarkProcessor time(boolean value) {
+	public CMarkTransformer time(boolean value) {
 		time = value;
 		return this;
 	}
 
 	@Override
-	public void process(BufferedReader in, Appendable out) throws IOException {
+	public void transform(BufferedReader in, Appendable out) throws IOException {
 		CMarkParser parser = new Parser(new Parser.Options()
 				.smart(smart)
 				.time(time));

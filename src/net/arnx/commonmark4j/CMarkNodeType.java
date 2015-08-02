@@ -5,6 +5,11 @@
  */
 package net.arnx.commonmark4j;
 
+/**
+ * A CommonMark node type.
+ *
+ * @author Hidekatsu Izuno
+ */
 public enum CMarkNodeType {
 	DOCUMENT,
 	PARAGRAPH,
