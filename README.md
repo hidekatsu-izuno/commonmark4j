@@ -21,11 +21,11 @@ Commonmark4j can run from command line.
 
 ```
 Usage: java -jar commonmark4j-[version].jar [options] [source] [dest]
-Options:");
+Options:
   -help               print this help message.
   -safe               remove dangerous code.
   -smart              use smart characters.
-  -softbreak <text>   set softbreak characters. (default: \\n)
+  -softbreak <text>   set softbreak characters. (default: \n)
   -sourcepos          include source position information.
   -time               print total time.");
   -format {html,xml}  output as specified format. (default: html)
